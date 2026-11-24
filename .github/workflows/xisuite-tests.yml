@@ -34,6 +34,16 @@ on:
         required: false
         type: string
         default: ''
+      tests:
+        description: Folder or file of the tests to run instead of the part; empty runs the part
+        required: false
+        type: string
+        default: ''
+      test_names:
+        description: Only the tests whose names match this pattern; empty runs them all
+        required: false
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -47,6 +57,8 @@ jobs:
       PUPPETEER_SKIP_DOWNLOAD: 'true'
       PART: ${{ inputs.part }}
       TM_APP_URL: ${{ inputs.app_url }}
+      TESTS: ${{ inputs.tests }}
+      TEST_NAMES: ${{ inputs.test_names }}
     steps:
       - uses: actions/checkout@v4
       - name: Use the deployed commit
@@ -114,7 +126,17 @@ jobs:
               npx vitest run --reporter=default --reporter=json --outputFile.json=reports/report.json
               ;;
             jest)
-              npx jest --ci --testPathPatterns "$pattern" --json --outputFile=reports/report.json
+              set -- --ci --json --outputFile=reports/report.json
+              # A folder with its own Jest config runs with it; any other path narrows the tests the part runs.
+              if [ -n "$TESTS" ] && [ -f "$TESTS/jest.config.json" ]; then
+                set -- "$@" --config "$TESTS/jest.config.json"
+              elif [ -n "$TESTS" ]; then
+                set -- "$@" --testPathPatterns "$TESTS"
+              else
+                set -- "$@" --testPathPatterns "$pattern"
+              fi
+              if [ -n "$TEST_NAMES" ]; then set -- "$@" --testNamePattern "$TEST_NAMES"; fi
+              npx jest "$@"
               ;;
             playwright)
               PLAYWRIGHT_JSON_OUTPUT_NAME=reports/report.json npx playwright test --reporter=list,json
