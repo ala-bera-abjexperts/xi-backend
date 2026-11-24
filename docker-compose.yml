@@ -1,0 +1,93 @@
+services:
+  xisuite-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: xisuite-backend:local
+    container_name: xisuite-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env
+    environment:
+      # Override container-internal binding when needed.
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3001
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3001/api/v1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  # Test runner images, build only: docker compose --profile tm-runner-images build
+  tm-runner-node:
+    profiles: ["tm-runner-images"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: tm-runner-node
+    image: xis-tm-runner-node:latest
+
+  tm-runner-playwright:
+    profiles: ["tm-runner-images"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: tm-runner-playwright
+    image: xis-tm-runner-playwright:latest
+
+  tm-runner-cypress:
+    profiles: ["tm-runner-images"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: tm-runner-cypress
+    image: xis-tm-runner-cypress:latest
+
+  tm-runner-junit:
+    profiles: ["tm-runner-images"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: tm-runner-junit
+    image: xis-tm-runner-junit:latest
+
+  tm-runner-proxy:
+    profiles: ["tm-runner-images"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: tm-runner-proxy
+    image: xis-tm-runner-proxy:latest
+
+  # The test runner worker: docker compose --profile tm-runner up -d tm-runner-worker
+  # The Docker socket gives it root on this machine; see docs/support/test-automation-runner.md.
+  tm-runner-worker:
+    profiles: ["tm-runner"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: tm-runner-worker
+    image: xis-tm-runner-worker:local
+    container_name: xis-tm-runner-worker
+    restart: unless-stopped
+    # Lets running tests finish after a stop.
+    stop_grace_period: 2m
+    # The socket already means root on the machine; test containers still run as 1000:1000.
+    user: root
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      TM_RUNNER_ENABLED: "1"
+      TM_RUNNER_WORK_DIR: ${TM_RUNNER_WORK_DIR:-/tmp/xis-tm-runner}
+      SUPABASE_URL: ${TM_RUNNER_SUPABASE_URL:-${SUPABASE_URL}}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # The same path inside and out, because test containers mount run folders through the host's Docker.
+      - ${TM_RUNNER_WORK_DIR:-/tmp/xis-tm-runner}:${TM_RUNNER_WORK_DIR:-/tmp/xis-tm-runner}

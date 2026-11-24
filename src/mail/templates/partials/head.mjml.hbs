@@ -1,0 +1,20 @@
+{{!-- Shared <mj-head> contents: brand tokens, fonts, preheader, base styles. --}}
+{{#if data.preheader}}<mj-preview>{{data.preheader}}</mj-preview>{{/if}}
+<mj-font name="Public Sans" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" />
+<mj-attributes>
+  <mj-all font-family="'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" />
+  <mj-text font-size="15px" color="#5A6573" line-height="1.6" font-weight="400" padding="0" />
+  <mj-button font-size="15px" font-weight="600" inner-padding="14px 30px" border-radius="6px" color="#ffffff" line-height="1.2" />
+  <mj-class name="h1" font-size="22px" font-weight="700" color="#22303E" line-height="1.3" />
+  <mj-class name="eyebrow" font-size="11px" letter-spacing="1px" color="#8592A3" font-weight="700" text-transform="uppercase" />
+  <mj-class name="muted" font-size="13px" color="#8592A3" line-height="1.6" />
+</mj-attributes>
+<mj-style>
+  a { color: {{brand.primaryColor}}; text-decoration: none; }
+  .x-link a { color: {{brand.primaryColor}} !important; text-decoration: none; }
+  .x-break a { word-break: break-all; }
+</mj-style>
+{{!-- A viewer that shrinks a message to its text still gets the full card; a phone still gets its own width. --}}
+<mj-style inline="inline">
+  .x-card { width: 600px; max-width: 100% !important; }
+</mj-style>

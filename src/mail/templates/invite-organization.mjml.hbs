@@ -1,0 +1,12 @@
+{{!-- Organization invitation. data: { name, org, role, ctaUrl, preheader } --}}
+{{#> layout}}
+  {{> heading eyebrow=(t 'invite.org.eyebrow') title=(t 'invite.org.title')}}
+  <mj-section padding="2px 32px 4px">
+    <mj-column>
+      <mj-text padding="0 0 12px">{{t 'invite.org.greeting' name=(fallback data.name 'there')}}</mj-text>
+      <mj-text>{{t 'invite.org.intro' org=data.org role=data.role}}</mj-text>
+    </mj-column>
+  </mj-section>
+  {{> button url=data.ctaUrl label=(t 'invite.org.cta') color=brand.primaryColor showLink=true linkLabel=(t 'common.pasteLink')}}
+  {{> infobox text=(t 'invite.org.note')}}
+{{/layout}}

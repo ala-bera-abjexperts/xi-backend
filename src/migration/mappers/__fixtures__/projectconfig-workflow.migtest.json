@@ -1,0 +1,360 @@
+{
+  "name": "MIGTEST - SDP Complex Workflow v1",
+  "sources": [
+    {
+      "fromStatus": {
+        "id": "10000",
+        "name": "To Do"
+      },
+      "targets": [
+        {
+          "toStatus": {
+            "id": "10004",
+            "name": "MIGTEST - SDP - Intake"
+          },
+          "transitionName": "Begin Complex Lifecycle",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        }
+      ]
+    },
+    {
+      "fromStatus": {
+        "id": "3",
+        "name": "In Progress"
+      },
+      "targets": []
+    },
+    {
+      "fromStatus": {
+        "id": "10001",
+        "name": "Done"
+      },
+      "targets": []
+    },
+    {
+      "fromStatus": {
+        "id": "10004",
+        "name": "MIGTEST - SDP - Intake"
+      },
+      "targets": [
+        {
+          "toStatus": {
+            "id": "10005",
+            "name": "MIGTEST - SDP - Triage"
+          },
+          "transitionName": "Submit for Triage",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        }
+      ]
+    },
+    {
+      "fromStatus": {
+        "id": "10005",
+        "name": "MIGTEST - SDP - Triage"
+      },
+      "targets": [
+        {
+          "toStatus": {
+            "id": "10004",
+            "name": "MIGTEST - SDP - Intake"
+          },
+          "transitionName": "Request Clarification",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        },
+        {
+          "toStatus": {
+            "id": "10005",
+            "name": "MIGTEST - SDP - Triage"
+          },
+          "transitionName": "Update Triage Notes",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        },
+        {
+          "toStatus": {
+            "id": "10006",
+            "name": "MIGTEST - SDP - Ready"
+          },
+          "transitionName": "Accept into Backlog"
+        },
+        {
+          "toStatus": {
+            "id": "10015",
+            "name": "MIGTEST - SDP - Rejected"
+          },
+          "transitionName": "Reject at Triage",
+          "screen": {
+            "name": "Resolve Issue Screen"
+          }
+        }
+      ]
+    },
+    {
+      "fromStatus": {
+        "id": "10006",
+        "name": "MIGTEST - SDP - Ready"
+      },
+      "targets": [
+        {
+          "toStatus": {
+            "id": "10007",
+            "name": "MIGTEST - SDP - In Progress"
+          },
+          "transitionName": "Start Work",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        }
+      ]
+    },
+    {
+      "fromStatus": {
+        "id": "10007",
+        "name": "MIGTEST - SDP - In Progress"
+      },
+      "targets": [
+        {
+          "toStatus": {
+            "id": "10006",
+            "name": "MIGTEST - SDP - Ready"
+          },
+          "transitionName": "Return to Ready",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        },
+        {
+          "toStatus": {
+            "id": "10009",
+            "name": "MIGTEST - SDP - Peer Review"
+          },
+          "transitionName": "Submit for Peer Review",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        },
+        {
+          "toStatus": {
+            "id": "10008",
+            "name": "MIGTEST - SDP - Blocked"
+          },
+          "transitionName": "Block during Development",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        }
+      ]
+    },
+    {
+      "fromStatus": {
+        "id": "10008",
+        "name": "MIGTEST - SDP - Blocked"
+      },
+      "targets": []
+    },
+    {
+      "fromStatus": {
+        "id": "10009",
+        "name": "MIGTEST - SDP - Peer Review"
+      },
+      "targets": [
+        {
+          "toStatus": {
+            "id": "10007",
+            "name": "MIGTEST - SDP - In Progress"
+          },
+          "transitionName": "Changes Required",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        },
+        {
+          "toStatus": {
+            "id": "10010",
+            "name": "MIGTEST - SDP - QA Verification"
+          },
+          "transitionName": "Review Approved"
+        },
+        {
+          "toStatus": {
+            "id": "10008",
+            "name": "MIGTEST - SDP - Blocked"
+          },
+          "transitionName": "Block during Review",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        }
+      ]
+    },
+    {
+      "fromStatus": {
+        "id": "10010",
+        "name": "MIGTEST - SDP - QA Verification"
+      },
+      "targets": [
+        {
+          "toStatus": {
+            "id": "10007",
+            "name": "MIGTEST - SDP - In Progress"
+          },
+          "transitionName": "QA Failed",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        },
+        {
+          "toStatus": {
+            "id": "10009",
+            "name": "MIGTEST - SDP - Peer Review"
+          },
+          "transitionName": "Return to Review",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        },
+        {
+          "toStatus": {
+            "id": "10010",
+            "name": "MIGTEST - SDP - QA Verification"
+          },
+          "transitionName": "Refresh QA Evidence",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        },
+        {
+          "toStatus": {
+            "id": "10011",
+            "name": "MIGTEST - SDP - Product Approval"
+          },
+          "transitionName": "QA Passed",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        },
+        {
+          "toStatus": {
+            "id": "10008",
+            "name": "MIGTEST - SDP - Blocked"
+          },
+          "transitionName": "Block during QA",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        }
+      ]
+    },
+    {
+      "fromStatus": {
+        "id": "10011",
+        "name": "MIGTEST - SDP - Product Approval"
+      },
+      "targets": [
+        {
+          "toStatus": {
+            "id": "10007",
+            "name": "MIGTEST - SDP - In Progress"
+          },
+          "transitionName": "Approval Changes Requested",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        },
+        {
+          "toStatus": {
+            "id": "10015",
+            "name": "MIGTEST - SDP - Rejected"
+          },
+          "transitionName": "Reject Product",
+          "screen": {
+            "name": "Resolve Issue Screen"
+          }
+        },
+        {
+          "toStatus": {
+            "id": "10012",
+            "name": "MIGTEST - SDP - Release Ready"
+          },
+          "transitionName": "Approve for Release",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        },
+        {
+          "toStatus": {
+            "id": "10008",
+            "name": "MIGTEST - SDP - Blocked"
+          },
+          "transitionName": "Block during Approval",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        }
+      ]
+    },
+    {
+      "fromStatus": {
+        "id": "10012",
+        "name": "MIGTEST - SDP - Release Ready"
+      },
+      "targets": [
+        {
+          "toStatus": {
+            "id": "10008",
+            "name": "MIGTEST - SDP - Blocked"
+          },
+          "transitionName": "Hold Release",
+          "screen": {
+            "name": "SDP: Scrum Default Issue Screen"
+          }
+        },
+        {
+          "toStatus": {
+            "id": "10014",
+            "name": "MIGTEST - SDP - Released"
+          },
+          "transitionName": "Release",
+          "screen": {
+            "name": "Resolve Issue Screen"
+          }
+        }
+      ]
+    },
+    {
+      "fromStatus": {
+        "id": "10013",
+        "name": "MIGTEST - SDP - Escalated"
+      },
+      "targets": []
+    },
+    {
+      "fromStatus": {
+        "id": "10014",
+        "name": "MIGTEST - SDP - Released"
+      },
+      "targets": []
+    },
+    {
+      "fromStatus": {
+        "id": "10015",
+        "name": "MIGTEST - SDP - Rejected"
+      },
+      "targets": []
+    },
+    {
+      "fromStatus": {
+        "id": "10016",
+        "name": "MIGTEST - SDP - Cancelled"
+      },
+      "targets": []
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{{!-- Footer: divider, optional manage-preferences link, org attribution. --}}
+<mj-section padding="12px 32px 30px">
+  <mj-column>
+    <mj-divider border-width="1px" border-color="#E7EAEE" padding="6px 0 18px" />
+    {{#if data.preferencesUrl}}
+    <mj-text mj-class="muted" padding="0 0 6px" css-class="x-link">
+      {{t 'footer.managePrefs'}} <a href="{{data.preferencesUrl}}">{{t 'footer.managePrefsLink'}}</a>
+    </mj-text>
+    {{/if}}
+    <mj-text mj-class="muted" font-size="12px" padding="0">
+      {{t 'footer.org' org=brand.orgName}}
+    </mj-text>
+  </mj-column>
+</mj-section>

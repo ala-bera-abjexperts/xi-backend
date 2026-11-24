@@ -1,0 +1,47 @@
+{{!--
+  Calendar entry reminder. data:
+    { title, summary, when?, calendar?, location?, recipientName?, ctaUrl, meetingUrl?, preheader? }
+--}}
+{{#> layout}}
+  {{> heading eyebrow=(t 'calendar.reminder.eyebrow') title=data.title}}
+  {{#if data.recipientName}}
+  <mj-section padding="2px 32px 6px">
+    <mj-column>
+      <mj-text padding="0">{{t 'notif.greeting' name=data.recipientName}}</mj-text>
+    </mj-column>
+  </mj-section>
+  {{/if}}
+  <mj-section padding="6px 32px 10px">
+    <mj-column background-color="#F4F6F8" border-radius="8px" padding="16px 18px">
+      <mj-text font-size="16px" font-weight="600" color="#22303E" line-height="1.4" padding="0 0 8px">{{data.summary}}</mj-text>
+      <mj-table padding="0" font-size="14px" color="#22303E" line-height="1.7">
+        {{#if data.when}}
+        <tr>
+          <td style="width:88px;color:#8592A3;vertical-align:top;">{{t 'calendar.reminder.when'}}</td>
+          <td style="vertical-align:top;">{{data.when}}</td>
+        </tr>
+        {{/if}}
+        {{#if data.calendar}}
+        <tr>
+          <td style="width:88px;color:#8592A3;vertical-align:top;">{{t 'calendar.reminder.calendar'}}</td>
+          <td style="vertical-align:top;">{{data.calendar}}</td>
+        </tr>
+        {{/if}}
+        {{#if data.location}}
+        <tr>
+          <td style="width:88px;color:#8592A3;vertical-align:top;">{{t 'calendar.reminder.where'}}</td>
+          <td style="vertical-align:top;">{{data.location}}</td>
+        </tr>
+        {{/if}}
+      </mj-table>
+    </mj-column>
+  </mj-section>
+  {{> button url=data.ctaUrl label=(t 'calendar.reminder.cta') color=brand.primaryColor}}
+  {{#if data.meetingUrl}}
+  <mj-section padding="0 32px 6px">
+    <mj-column>
+      <mj-text font-size="14px" padding="4px 0 0" css-class="x-link"><a href="{{data.meetingUrl}}">{{t 'calendar.reminder.join'}}</a></mj-text>
+    </mj-column>
+  </mj-section>
+  {{/if}}
+{{/layout}}

@@ -1,0 +1,15 @@
+{
+  "typescript.tsdk": "node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "eslint.workingDirectories": ["."],
+  "eslint.options": {
+    "overrideConfigFile": "eslint.config.mjs"
+  },
+  "eslint.rules.customizations": [
+    { "rule": "@typescript-eslint/no-unsafe-return", "severity": "off" },
+    { "rule": "@typescript-eslint/no-unsafe-call", "severity": "off" },
+    { "rule": "@typescript-eslint/no-unsafe-member-access", "severity": "off" },
+    { "rule": "@typescript-eslint/no-unsafe-assignment", "severity": "off" },
+    { "rule": "@typescript-eslint/no-unsafe-argument", "severity": "off" }
+  ]
+}

@@ -1,0 +1,15 @@
+{{!-- Welcome after verification. data: { name, ctaUrl, preheader } --}}
+{{#> layout}}
+  {{> heading eyebrow=(t 'auth.welcome.eyebrow') title=(t 'auth.welcome.title' name=(fallback data.name 'there'))}}
+  <mj-section padding="2px 32px 4px">
+    <mj-column>
+      <mj-text>{{t 'auth.welcome.intro'}}</mj-text>
+    </mj-column>
+  </mj-section>
+  {{#if data.ctaUrl}}{{> button url=data.ctaUrl label=(t 'auth.welcome.cta') color=brand.primaryColor}}{{/if}}
+  <mj-section padding="10px 32px 6px">
+    <mj-column>
+      <mj-text mj-class="muted">{{t 'auth.welcome.note'}}</mj-text>
+    </mj-column>
+  </mj-section>
+{{/layout}}

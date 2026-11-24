@@ -1,0 +1,12 @@
+{{!-- Space invitation. data: { name, inviter, space, org, role, date, ctaUrl, preheader } --}}
+{{#> layout}}
+  {{> heading eyebrow=(t 'invite.space.eyebrow') title=(t 'invite.space.title')}}
+  <mj-section padding="2px 32px 4px">
+    <mj-column>
+      <mj-text padding="0 0 12px">{{t 'invite.space.greeting' name=(fallback data.name 'there')}}</mj-text>
+      <mj-text>{{t 'invite.space.intro' inviter=data.inviter space=data.space org=data.org role=data.role}}</mj-text>
+    </mj-column>
+  </mj-section>
+  {{> button url=data.ctaUrl label=(t 'invite.space.cta') color=brand.primaryColor showLink=true linkLabel=(t 'common.pasteLink')}}
+  {{> infobox text=(t 'invite.space.note' date=data.date)}}
+{{/layout}}

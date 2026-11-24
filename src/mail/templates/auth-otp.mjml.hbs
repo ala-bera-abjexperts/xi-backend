@@ -1,0 +1,16 @@
+{{!-- Signup / verification OTP. data: { titleKey, introKey, otp, preheader } --}}
+{{#> layout}}
+  {{> heading eyebrow=(t 'auth.otp.eyebrow') title=(t data.titleKey)}}
+  <mj-section padding="2px 32px 6px">
+    <mj-column>
+      <mj-text>{{t data.introKey}}</mj-text>
+    </mj-column>
+  </mj-section>
+  {{> otp code=data.otp label=(t 'auth.otp.codeLabel')}}
+  <mj-section padding="10px 32px 6px">
+    <mj-column>
+      <mj-text mj-class="muted">{{t 'auth.otp.expiry'}}</mj-text>
+      <mj-text mj-class="muted" padding="8px 0 0">{{t 'auth.otp.ignore'}}</mj-text>
+    </mj-column>
+  </mj-section>
+{{/layout}}

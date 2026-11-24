@@ -1,0 +1,14 @@
+{{!--
+  Primary CTA. Params:
+    url, label, color (brand primary), and optionally showLink + linkLabel
+  to render a copy-paste fallback link beneath the button (used by auth emails).
+--}}
+<mj-section padding="8px 32px 6px">
+  <mj-column>
+    <mj-button href="{{url}}" background-color="{{color}}" align="left" border-radius="6px" padding="6px 0 6px">{{label}}</mj-button>
+    {{#if showLink}}
+    <mj-text font-size="13px" color="#8592A3" padding="10px 0 2px">{{linkLabel}}</mj-text>
+    <mj-text font-size="13px" padding="0" css-class="x-break"><a href="{{url}}" style="color:{{color}};word-break:break-all;">{{url}}</a></mj-text>
+    {{/if}}
+  </mj-column>
+</mj-section>

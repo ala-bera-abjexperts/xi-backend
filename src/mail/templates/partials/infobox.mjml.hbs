@@ -1,0 +1,11 @@
+{{!--
+  Tonal note panel. Params:
+    text, bg (panel background, defaults to a soft neutral).
+  A clean rounded tinted panel with no left rule (border-left + border-radius
+  renders as a detached "pill" in several email clients).
+--}}
+<mj-section padding="6px 32px">
+  <mj-column background-color="{{fallback bg '#F4F6F8'}}" border-radius="8px" padding="14px 18px">
+    <mj-text font-size="13px" color="#697586" line-height="1.6" padding="0">{{text}}</mj-text>
+  </mj-column>
+</mj-section>

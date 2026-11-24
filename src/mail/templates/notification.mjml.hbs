@@ -1,0 +1,24 @@
+{{!--
+  Generic notification email. data:
+    { eyebrow?, title, body?, recipientName?, ctaUrl?, ctaLabel?, secondaryUrl?, secondaryLabel?,
+      preferencesUrl?, preheader? }
+  One flexible template reused for every notification type (mention, invitation,
+  reminder, workflow transition, management letter, automation, ...).
+--}}
+{{#> layout}}
+  {{> heading eyebrow=data.eyebrow title=data.title}}
+  <mj-section padding="2px 32px 6px">
+    <mj-column>
+      {{#if data.recipientName}}<mj-text padding="0 0 12px">{{t 'notif.greeting' name=data.recipientName}}</mj-text>{{/if}}
+      {{#if data.body}}<mj-text>{{nl2br data.body}}</mj-text>{{/if}}
+    </mj-column>
+  </mj-section>
+  {{#if data.ctaUrl}}{{> button url=data.ctaUrl label=(fallback data.ctaLabel (t 'notif.cta.view')) color=brand.primaryColor}}{{/if}}
+  {{#if data.secondaryUrl}}
+  <mj-section padding="0 32px 6px">
+    <mj-column>
+      <mj-text font-size="14px" padding="4px 0"><a href="{{data.secondaryUrl}}" style="color:{{brand.primaryColor}};">{{data.secondaryLabel}}</a></mj-text>
+    </mj-column>
+  </mj-section>
+  {{/if}}
+{{/layout}}

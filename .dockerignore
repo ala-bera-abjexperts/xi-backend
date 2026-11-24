@@ -1,0 +1,39 @@
+# Build artefacts
+dist/
+coverage/
+build/
+
+# Source control / IDE
+.git/
+.github/
+.idea/
+.vscode/
+
+# Local node_modules — installed fresh inside the image
+node_modules/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests — already excluded from the Nest build, but no need to send to context
+test/
+**/*.spec.ts
+
+# Secrets & local config — never bake env into the image
+.env
+.env.*
+!.env.example
+
+# Docker artefacts (don't recurse them into the build context)
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml
+
+# Misc
+README.md

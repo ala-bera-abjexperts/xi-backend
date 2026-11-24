@@ -1,0 +1,7 @@
+{{!-- OTP / verification code box. Params: code, label. --}}
+<mj-section padding="8px 32px">
+  <mj-column background-color="#FEF3E0" border-radius="8px" padding="22px 16px">
+    {{#if label}}<mj-text align="center" font-size="13px" color="#8592A3" padding="0 0 10px">{{label}}</mj-text>{{/if}}
+    <mj-text align="center" font-size="34px" font-weight="700" color="#22303E" letter-spacing="8px" font-family="'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace" padding="0">{{code}}</mj-text>
+  </mj-column>
+</mj-section>
