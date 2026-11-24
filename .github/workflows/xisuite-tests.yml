@@ -1,0 +1,146 @@
+# Runs XISUITE's own tests when Test Management starts this workflow; the results come back as an artifact.
+name: XISUITE tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      part:
+        description: Which backend tests to run
+        required: true
+        type: choice
+        options:
+          - backend-am
+          - backend-nz
+      sha:
+        description: Deployed commit to test; empty tests the branch
+        required: false
+        type: string
+        default: ''
+      framework:
+        description: Test framework to run; auto picks it from package.json
+        required: false
+        type: choice
+        default: auto
+        options:
+          - auto
+          - vitest
+          - jest
+          - playwright
+          - cypress
+          - mocha
+          - node-test
+      app_url:
+        description: Address of the deployed app for end-to-end tests; empty skips them
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      NODE_OPTIONS: --experimental-vm-modules
+      PUPPETEER_SKIP_DOWNLOAD: 'true'
+      PART: ${{ inputs.part }}
+      TM_APP_URL: ${{ inputs.app_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use the deployed commit
+        if: inputs.sha != ''
+        env:
+          SHA: ${{ inputs.sha }}
+        run: |
+          if ! printf '%s' "$SHA" | grep -Eq '^[0-9a-f]{40}([0-9a-f]{24})?$'; then
+            echo "::error::The sha input is not a full commit id"
+            exit 1
+          fi
+          # The GitLab mirror can be a few minutes behind the deploy.
+          for attempt in $(seq 1 20); do
+            if git fetch --depth=1 origin "$SHA"; then
+              git checkout --detach FETCH_HEAD
+              exit 0
+            fi
+            sleep 30
+          done
+          echo "::error::Commit $SHA is not on GitHub yet"
+          exit 1
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Pick the test framework
+        id: framework
+        env:
+          FRAMEWORK: ${{ inputs.framework }}
+        run: |
+          if [ -z "$FRAMEWORK" ] || [ "$FRAMEWORK" = "auto" ]; then
+            FRAMEWORK=$(node -e 'const p = require("./package.json"); const d = { ...p.dependencies, ...p.devDependencies }; const m = { vitest: "vitest", jest: "jest", "@playwright/test": "playwright", cypress: "cypress", mocha: "mocha" }; console.log(m[Object.keys(m).find(k => d[k])] ?? "node-test")')
+          fi
+          case "$FRAMEWORK" in
+            vitest|jest|playwright|cypress|mocha|node-test) ;;
+            *)
+              echo "::error::The framework input is not a supported test framework"
+              exit 1
+              ;;
+          esac
+          echo "name=$FRAMEWORK" >> "$GITHUB_OUTPUT"
+          echo "Test framework: $FRAMEWORK"
+      - name: Install the Playwright browsers
+        if: steps.framework.outputs.name == 'playwright'
+        run: npx playwright install --with-deps
+      - name: Check the Cypress install
+        if: steps.framework.outputs.name == 'cypress'
+        # pnpm skips Cypress's own download step, so the binary is fetched here.
+        run: |
+          npx cypress install
+          npx cypress verify
+      - name: Run the tests
+        env:
+          FRAMEWORK: ${{ steps.framework.outputs.name }}
+        run: |
+          pattern='/src/[a-m]'
+          if [ "$PART" = "backend-nz" ]; then pattern='/src/[n-z]'; fi
+          if [ "$FRAMEWORK" != "jest" ]; then echo "::notice::The part input applies to Jest only"; fi
+          # node:test does not create the report folder itself.
+          mkdir -p reports/junit
+          case "$FRAMEWORK" in
+            vitest)
+              npx vitest run --reporter=default --reporter=json --outputFile.json=reports/report.json
+              ;;
+            jest)
+              npx jest --ci --testPathPatterns "$pattern" --json --outputFile=reports/report.json
+              ;;
+            playwright)
+              PLAYWRIGHT_JSON_OUTPUT_NAME=reports/report.json npx playwright test --reporter=list,json
+              ;;
+            cypress)
+              npx cypress run --reporter junit --reporter-options "mochaFile=reports/junit/[hash].xml"
+              ;;
+            mocha)
+              npx mocha --reporter json --reporter-option output=reports/report.json
+              ;;
+            node-test)
+              node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=reports/junit/node.xml
+              ;;
+          esac
+      - name: One result per test file
+        if: always()
+        env:
+          FRAMEWORK: ${{ steps.framework.outputs.name }}
+        run: |
+          REPORT=reports/report.json
+          case "$FRAMEWORK" in
+            cypress|node-test) REPORT=reports/junit ;;
+          esac
+          node scripts/junit-per-file.mjs "$REPORT" reports/per-file.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: xisuite-test-results
+          path: reports/per-file.xml
