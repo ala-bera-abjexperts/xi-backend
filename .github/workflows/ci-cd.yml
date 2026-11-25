@@ -1,0 +1,35 @@
+# CI/CD of this repository: runs the tasks module's tests on every push to main.
+# When it finishes successfully, XISUITE starts the Story's Tech-Testcases on its own test runner.
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One run per branch at a time; a newer push waits instead of cancelling the running check.
+concurrency:
+  group: ci-cd-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  backend-test:
+    name: Backend test (tasks module)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NODE_OPTIONS: --experimental-vm-modules
+      PUPPETEER_SKIP_DOWNLOAD: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Run the tasks module's tests
+        run: pnpm test -- src/tasks
