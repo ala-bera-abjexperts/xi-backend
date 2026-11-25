@@ -17,7 +17,7 @@ node_modules/
 logs/
 
 # OS
-.DS_Store
+.DS_Store 
 Thumbs.db
 
 # Tests — already excluded from the Nest build, but no need to send to context
